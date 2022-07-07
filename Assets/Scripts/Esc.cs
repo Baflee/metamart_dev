@@ -7,6 +7,7 @@ public class Esc : MonoBehaviour
 {
     [SerializeField] private GameObject pauseMenuUI;
     [SerializeField] private bool isEsc;
+    bool UpdateInventory = true;
 
     private void Update()
     {
@@ -18,9 +19,16 @@ public class Esc : MonoBehaviour
         if (isEsc)
         {
             ActivateMenu();
+
+            if(UpdateInventory == true)
+            {
+                pauseMenuUI.GetComponent<InventoryMenu>().ShowInventory();
+                UpdateInventory = false;
+            }
         }
         else
         {
+            UpdateInventory = true;
             DeactivateMenu();
         }
     }

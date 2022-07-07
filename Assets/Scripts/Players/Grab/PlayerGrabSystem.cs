@@ -33,7 +33,7 @@ public class PlayerGrabSystem : MonoBehaviour
                     Input.GetButtonDown("Use")
                 )
                 {
-                    Debug.Log("Buyed");
+                    pauseMenuUI.GetComponent<InventoryMenu>().AddInventory(ProductInfo.id, 1);
                 }
                 float price = ProductInfo.price;
                 CameraUIGrab.GetComponent<Text>().text = "[E] ACHETER " + ProductInfo.name + " " + price.ToString() + " Є";
