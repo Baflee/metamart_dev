@@ -12,6 +12,10 @@ public class PlayerGrabSystem : MonoBehaviour
     [SerializeField]
     private GameObject CameraUIGrab;
 
+    [SerializeField] private GameObject Inventory;
+
+    [SerializeField] private GameObject pauseMenuUI;
+
     GameObject GetMouseHoverObject(float grabeRange)
     {
         //Check for Collider with Raycast
@@ -33,7 +37,7 @@ public class PlayerGrabSystem : MonoBehaviour
                     Input.GetButtonDown("Use")
                 )
                 {
-                    pauseMenuUI.GetComponent<InventoryMenu>().AddInventory(ProductInfo.id, 1);
+                    Inventory.GetComponent<Inventory>().AddInventory(ProductInfo.id, 1);
                 }
                 float price = ProductInfo.price;
                 CameraUIGrab.GetComponent<Text>().text = "[E] ACHETER " + ProductInfo.name + " " + price.ToString() + " Є";

@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class Esc : MonoBehaviour
 {
     [SerializeField] private GameObject pauseMenuUI;
+    [SerializeField] private GameObject Inventory;
     [SerializeField] private bool isEsc;
     bool UpdateInventory = true;
 
@@ -22,7 +23,7 @@ public class Esc : MonoBehaviour
 
             if(UpdateInventory == true)
             {
-                pauseMenuUI.GetComponent<InventoryMenu>().ShowInventory();
+                Inventory.GetComponent<Inventory>().ShowInventory();
                 UpdateInventory = false;
             }
         }

@@ -12,17 +12,17 @@ public class Inventory : MonoBehaviour
 	[SerializeField] string Information;
 	
 	[SerializeField] string url;
-
+    
     [SerializeField]
-	public class product
+	public class Product
 	{
 	    public string product_id;
 	    public int quantity;
 	}
 
 	public void ShowInventory() => StartCoroutine(ShowInventory_Coroutine());
-
-    public void AddInventory(string product_id, int quantity) => StartCoroutine(ShowInventory_Coroutine(string product_id, int quantity));
+    
+    public void AddInventory(string product_id, int quantity) => StartCoroutine(AddInventory_Coroutine(product_id, quantity));
 
     IEnumerator ShowInventory_Coroutine()
     {
@@ -58,11 +58,11 @@ public class Inventory : MonoBehaviour
     IEnumerator AddInventory_Coroutine(string product_id, int quantity)
     {
 
-	Product product = new Product();
-	    product.product_id = product_id;
-	    product.quantity = quantity;
+	    Product product = new Product();
+	        product.product_id = product_id;
+	        product.quantity = quantity;
 
-	string data = JsonUtility.ToJson(product);
+	    string data = JsonUtility.ToJson(product);
 
 		User_Info User_Info = GameObject.Find("ID").GetComponent<User_Info>();
 
@@ -82,35 +82,17 @@ public class Inventory : MonoBehaviour
 
         if (request.isNetworkError || request.isHttpError)
         {
-            Info Info = JsonConvert.DeserializeObject<Info>(request.downloadHandler.text);
-			if(Info.success == false) {
-				errorMessages.text = Info.message;
-			}			            
+			Debug.Log(request.downloadHandler.text);		            
         }
         else
         {
             Debug.Log("Form upload complete!");
 
             if(request.downloadHandler.text != null) {
-				Info Info = JsonConvert.DeserializeObject<Info>(request.downloadHandler.text);
-				Details Details = Info.details;
-				Data Data = Details.data;
-				Session Session = Data.session;
-
-				if(Info.success == true) {
-					errorMessages.text = "Bienvenue, " + Data.name;
-					User_Info user_data = idTable.GetComponent<User_Info>();
-					user_data.name = Data.name;
-					user_data.last_name = Data.last_name;
-					user_data.token = Session.token;
-					DontDestroyOnLoad(idTable);
-					SceneManager.LoadScene("Jeu");
-				}						
+                Debug.Log(request.downloadHandler.text);
             }
-
-            Debug.Log(request.downloadHandler.text);
         }
         Debug.Log(data);
     }
 }   
-}
+
