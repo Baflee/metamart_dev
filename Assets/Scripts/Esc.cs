@@ -5,9 +5,15 @@ using UnityEngine.SceneManagement;
 
 public class Esc : MonoBehaviour
 {
-    [SerializeField] private GameObject pauseMenuUI;
-    [SerializeField] private GameObject Inventory;
-    [SerializeField] private bool isEsc;
+    [SerializeField]
+    private GameObject pauseMenuUI;
+
+    [SerializeField]
+    private GameObject Inventory;
+
+    [SerializeField]
+    private bool isEsc;
+
     bool UpdateInventory = true;
 
     private void Update()
@@ -21,7 +27,7 @@ public class Esc : MonoBehaviour
         {
             ActivateMenu();
 
-            if(UpdateInventory == true)
+            if (UpdateInventory == true)
             {
                 Inventory.GetComponent<Inventory>().ShowInventory();
                 UpdateInventory = false;
@@ -36,18 +42,18 @@ public class Esc : MonoBehaviour
 
     void ActivateMenu()
     {
-        pauseMenuUI.SetActive(true); 
+        pauseMenuUI.SetActive(true);
         Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true; 
-        Time.timeScale = 0;                              
+        Cursor.visible = true;
+        Time.timeScale = 0;
     }
 
     public void DeactivateMenu()
     {
         pauseMenuUI.SetActive(false);
         Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;    
-        Time.timeScale = 1;                        
+        Cursor.visible = false;
+        Time.timeScale = 1;
     }
 
     public void Reprendre()
@@ -63,11 +69,11 @@ public class Esc : MonoBehaviour
 
     public void Restart()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);    
-    }    
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
 
     public void QuitGame()
     {
         Application.Quit();
-    }    
+    }
 }
