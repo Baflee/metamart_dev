@@ -67,7 +67,9 @@ public class Inventory : MonoBehaviour
     {
         public string name;
 
-        public int price;
+        public double price;
+
+        public string storeName;
     }
 
     void Start()
@@ -114,6 +116,9 @@ public class Inventory : MonoBehaviour
     public void AddInventory(string product_id, int quantity) =>
         StartCoroutine(AddInventory_Coroutine(product_id, quantity));
 
+    public void UpdateInventory(string product_id, int quantity) =>
+        StartCoroutine(UpdateInventory_Coroutine(product_id, quantity));
+
     public void RemoveInventory(string product_id) =>
         StartCoroutine(RemoveInventory_Coroutine(product_id));
 
@@ -155,12 +160,19 @@ public class Inventory : MonoBehaviour
                 int indexpage = 0 + (page * 20);
                 for (int i = indexpage; i < lengthpage; i++)
                 {
+                    /*
                     Debug.Log("debutpage : " + i);
                     Debug.Log("indexactuelvalue : " + indexpage);
                     Debug.Log("finpage : " + lengthpage);
+                    */
                     if (i < Datas.Length)
                     {
                         inventoryItems[i - (page * 20)].SetActive(true);
+                        inventoryItems[i - (page * 20)]
+                            .transform
+                            .Find("InventoryStoreName")
+                            .GetComponent<Text>()
+                            .text = Datas[i].storeName;
                         inventoryItems[i - (page * 20)]
                             .transform
                             .Find("InventoryName")
@@ -179,8 +191,17 @@ public class Inventory : MonoBehaviour
                             .text = Raw_Datas[i].quantity.ToString();
                         inventoryItems[i - (page * 20)]
                             .transform
+                            .Find("InputField")
+                            .GetComponent<InputField>()
+                            .text = Raw_Datas[i].quantity.ToString();
+                        inventoryItems[i - (page * 20)]
+                            .transform
                             .Find("Button")
                             .GetComponent<Remove_Item>()
+                            .id = Raw_Datas[i].product_id;
+                        inventoryItems[i - (page * 20)]
+                            .transform
+                            .GetComponent<Update_Item>()
                             .id = Raw_Datas[i].product_id;
                     }
                     else
@@ -223,11 +244,12 @@ public class Inventory : MonoBehaviour
         }
         else
         {
-            Debug.Log("Item Remove completed!");
+            Debug.Log("Item Add Request completed!");
 
             if (request.downloadHandler.text != null)
             {
                 Debug.Log(request.downloadHandler.text);
+                ShowInventory();
             }
         }
     }
@@ -247,8 +269,8 @@ public class Inventory : MonoBehaviour
             Debug.Log("Token User Expired");
         }
 
-        var request = new UnityWebRequest(url, "patch");
-        request.method = "patch";
+        var request = new UnityWebRequest(url, "PATCH");
+        request.method = "PATCH";
         request.SetRequestHeader("Content-Type", "application/json");
         request.SetRequestHeader("Authorization", "Bearer " + User_Info.token);
         var jsonBytes = Encoding.UTF8.GetBytes(data);
@@ -264,11 +286,12 @@ public class Inventory : MonoBehaviour
         }
         else
         {
-            Debug.Log("Item Remove completed!");
+            Debug.Log("Item Update Request completed!");
 
             if (request.downloadHandler.text != null)
             {
                 Debug.Log(request.downloadHandler.text);
+                ShowInventory();
             }
         }
     }
@@ -303,11 +326,12 @@ public class Inventory : MonoBehaviour
         }
         else
         {
-            Debug.Log("Item Remove completed!");
+            Debug.Log("Item Remove Request completed!");
 
             if (request.downloadHandler.text != null)
             {
                 Debug.Log(request.downloadHandler.text);
+                ShowInventory();
             }
         }
     }

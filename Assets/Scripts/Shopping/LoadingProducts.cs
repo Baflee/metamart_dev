@@ -42,7 +42,7 @@ public class LoadingProducts : MonoBehaviour
 	    public string store_id;
 	    public string name;	
 	    public string description;
-	    public int price;
+	    public double price;
 	    public ObjectInfo game_object;    
 	}
 

@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class ShopMenu : MonoBehaviour
@@ -9,12 +9,16 @@ public class ShopMenu : MonoBehaviour
 
     [SerializeField]
     public GameObject[] Spawn;
+
     public string[] ShopName;
+
     public List<string> Shops = new List<string>();
 
     [SerializeField]
     public Dropdown m_Dropdown;
+
     int m_DropdownValue;
+
     int m_DropdownListNumber;
 
     public void List()
@@ -31,7 +35,7 @@ public class ShopMenu : MonoBehaviour
                 Physics.SyncTransforms();
             }
         }
-        Debug.Log(Shops);
+        Debug.Log (Shops);
     }
 
     public void Start()
@@ -40,6 +44,13 @@ public class ShopMenu : MonoBehaviour
         {
             Shops.Add(ShopName[i]);
         }
-        m_Dropdown.AddOptions(Shops);
+        m_Dropdown.AddOptions (Shops);
+    }
+
+    public void FinishBuying()
+    {
+        Application
+            .OpenURL("http://metamart.eri.gg/purchase?token=" +
+            GameObject.Find("ID").GetComponent<User_Info>().token);
     }
 }

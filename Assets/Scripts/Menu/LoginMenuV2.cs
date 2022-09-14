@@ -1,88 +1,100 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Text;
+using Newtonsoft.Json;
 using UnityEngine;
-using UnityEngine.UI;
-using System.Collections;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
-using Newtonsoft.Json;
-using System.Text;
+using UnityEngine.UI;
 
 public class LoginMenuV2 : MonoBehaviour
 {
+    [SerializeField]
+    GameObject welcomePanel;
 
-	[SerializeField] GameObject welcomePanel;
-	[SerializeField] Text user;
-	[Space]
-	[SerializeField] InputField email;
-	[SerializeField] InputField password;
+    [SerializeField]
+    Text user;
 
-	[SerializeField] Text errorMessages;
+    [Space]
+    [SerializeField]
+    InputField email;
 
-	[SerializeField] GameObject idTable;
+    [SerializeField]
+    InputField password;
 
+    [SerializeField]
+    Text errorMessages;
 
-	[SerializeField] Button loginButton;
+    [SerializeField]
+    GameObject idTable;
 
-	[SerializeField] string Information;
+    [SerializeField]
+    Button loginButton;
 
-	
-	[SerializeField] string url;
+    [SerializeField]
+    string Information;
 
-	[SerializeField]
-	public class Account
-	{
-	    public string email;
-	    public string password;
-	}
+    [SerializeField]
+    string url;
 
-	[SerializeField]
-	public class Info
-	{
-	    public string message;
-	    public bool success;
-	   	public Details details;
-	}	
+    [SerializeField]
+    public class Account
+    {
+        public string email;
 
-	[SerializeField]
-	public class Details
-	{
-	    public Data data;
-	}	
+        public string password;
+    }
 
-	[SerializeField]
-	public class Data
-	{
-	    public Session session;
-	    public string name;	
-	    public string last_name;    
-	}	
+    [SerializeField]
+    public class Info
+    {
+        public string message;
 
-	[SerializeField]
-	public class Session
-	{
-	    public string token;
-	}	
+        public bool success;
 
+        public Details details;
+    }
 
-	public void Start()
-	{
-		loginButton.onClick.AddListener(Login);
-	}
+    [SerializeField]
+    public class Details
+    {
+        public Data data;
+    }
 
-	void Login() => StartCoroutine(Login_Coroutine());
+    [SerializeField]
+    public class Data
+    {
+        public Session session;
+
+        public string name;
+
+        public string last_name;
+    }
+
+    [SerializeField]
+    public class Session
+    {
+        public string token;
+    }
+
+    public void Start()
+    {
+        loginButton.onClick.AddListener (Login);
+    }
+
+    void Login() => StartCoroutine(Login_Coroutine());
 
     IEnumerator Login_Coroutine()
     {
+        Account account = new Account();
+        account.email = email.text;
+        account.password = password.text;
 
-	Account account = new Account();
-	    account.email = email.text;
-	    account.password = password.text;
-
-	string data = JsonUtility.ToJson(account);
-
+        string data = JsonUtility.ToJson(account);
 
         var request = new UnityWebRequest(url, UnityWebRequest.kHttpVerbPOST);
         request.SetRequestHeader("Content-Type", "application/json");
+        request.SetRequestHeader("Access-Control-Allow-Origin", "*");
         var jsonBytes = Encoding.UTF8.GetBytes(data);
         request.uploadHandler = new UploadHandlerRaw(jsonBytes);
 
@@ -90,36 +102,48 @@ public class LoginMenuV2 : MonoBehaviour
 
         yield return request.SendWebRequest();
 
+        errorMessages.text = "test1";
         if (request.isNetworkError || request.isHttpError)
         {
-            Info Info = JsonConvert.DeserializeObject<Info>(request.downloadHandler.text);
-			if(Info.success == false) {
-				errorMessages.text = Info.message;
-			}			            
+            Info Info =
+                JsonConvert
+                    .DeserializeObject<Info>(request.downloadHandler.text);
+            if (Info.success == false)
+            {
+                errorMessages.text = Info.message;
+            }
         }
         else
         {
+            errorMessages.text = "test2";
             Debug.Log("Form upload complete!");
 
-            if(request.downloadHandler.text != null) {
-				Info Info = JsonConvert.DeserializeObject<Info>(request.downloadHandler.text);
-				Details Details = Info.details;
-				Data Data = Details.data;
-				Session Session = Data.session;
+            if (request.downloadHandler.text != null)
+            {
+                errorMessages.text = "test3";
+                errorMessages.text = request.downloadHandler.text;
+                Info Info =
+                    JsonConvert
+                        .DeserializeObject<Info>(request.downloadHandler.text);
+                Details Details = Info.details;
+                Data Data = Details.data;
+                Session Session = Data.session;
 
-				if(Info.success == true) {
-					errorMessages.text = "Bienvenue, " + Data.name;
-					User_Info user_data = idTable.GetComponent<User_Info>();
-					user_data.name = Data.name;
-					user_data.last_name = Data.last_name;
-					user_data.token = Session.token;
-					DontDestroyOnLoad(idTable);
-					SceneManager.LoadScene("Jeu");
-				}						
+                if (Info.success == true)
+                {
+                    errorMessages.text = "test4";
+                    errorMessages.text = "Bienvenue, " + Data.name;
+                    User_Info user_data = idTable.GetComponent<User_Info>();
+                    user_data.name = Data.name;
+                    user_data.last_name = Data.last_name;
+                    user_data.token = Session.token;
+                    DontDestroyOnLoad (idTable);
+                    SceneManager.LoadScene("Jeu");
+                }
             }
 
             Debug.Log(request.downloadHandler.text);
         }
-        Debug.Log(data);
+        Debug.Log (data);
     }
 }

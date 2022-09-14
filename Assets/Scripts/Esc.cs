@@ -72,6 +72,16 @@ public class Esc : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
+    public void Deconnection()
+    {
+        GameObject ID = GameObject.Find("ID");
+        if (ID)
+        {
+            Destroy (ID);
+        }
+        SceneManager.LoadScene("Login");
+    }
+
     public void QuitGame()
     {
         Application.Quit();

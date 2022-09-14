@@ -6,5 +6,5 @@ public class Product_Info : MonoBehaviour
 {
 	[SerializeField] public string id;
 	[SerializeField] public string name;
-	[SerializeField] public float price;
+	[SerializeField] public double price;
 }
